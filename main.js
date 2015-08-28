@@ -1,9 +1,10 @@
 var namespacePrefix = "sps_";
 
 SaaSProfitSimulation = function() {
-  this.setVisitorsPerMonth(5);
-  this.setConversionRate(0.1);
+  this.setVisitorsPerMonth(50);
+  this.setConversionRate(0.4);
   this.setChurnRate(0.2);
+  this.setMonthlyPayment(10);
   this.setReferralRate(0.1);
 
   this._people = {};
@@ -23,8 +24,16 @@ fn.setChurnRate = function(churnRate) { // Between 0 and 1
   this._churnRate = churnRate;
 };
 
+fn.setMonthlyPayment = function(monthlyPayment) { // Greater than 0
+  this._monthlyPayment = monthlyPayment;
+};
+
 fn.setReferralRate = function(referralRate) { // Between 0 and 0.9
   this._referralRate = referralRate;
+};
+
+fn.on = function(eventName, cb) {
+  $(document).on(namespacePrefix+eventName, cb);
 };
 
 fn.start = function() {
@@ -41,7 +50,7 @@ fn.start = function() {
 
     eventInfo.userId = person._userId;
 
-    console.log("EVENT: ", namespacePrefix+eventName, eventInfo);
+    $(document).trigger(namespacePrefix+eventName, eventInfo);
   }
 
   function doMonthly(person, cb) {
@@ -76,7 +85,9 @@ fn.start = function() {
         case PERSON_STATES.CREATED:
           if(Math.random() < self._conversionRate) {
             sendPersonEvent(person, "converted");
-            sendPersonEvent(person, "paid");
+            sendPersonEvent(person, "paid", {
+              payment: self._monthlyPayment
+            });
             delete self._people[key];
           }
           else {

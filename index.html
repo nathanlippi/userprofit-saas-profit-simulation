@@ -1,12 +1,35 @@
 <html>
   <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script type="text/javascript" src="main.js"></script>
     <link rel="stylesheet" type="text/css" href="main.css">
 
     <script>
-      var ps = new SaaSProfitSimulation();
+      $(document).ready(function() {
+        var sps = new SaaSProfitSimulation();
+        sps.start();
 
-      ps.start();
+        var totalRevenue = 0;
+
+        sps.on("created", function(e, info) {
+          console.log("CREATED: ", info);
+        });
+
+        sps.on("converted", function(e, info) {
+          console.log("CONVERTED: ", info);
+        });
+
+        sps.on("not_converted", function(e, info) {
+          console.log("NOT_CONVERTED: ", info);
+        });
+
+        sps.on("paid", function(e, info) {
+          console.log("PAID: ", info);
+          totalRevenue += info.payment;
+          console.log("TOTAL_REVENUE: ", totalRevenue);
+        });
+
+      });
     </script>
   </head>
 
