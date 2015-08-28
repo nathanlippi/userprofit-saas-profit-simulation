@@ -38,7 +38,7 @@ fn.on = function(eventName, cb) {
 
 fn.start = function() {
   var framesPerSecond = 10;
-  var secondsPerMonth = 5;
+  var secondsPerMonth = 50;
   var framesPerMonth = framesPerSecond * secondsPerMonth;
   var msPerFrame = 1000 / framesPerSecond;
 

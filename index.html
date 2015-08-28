@@ -11,29 +11,34 @@
 
         var totalRevenue = 0;
 
+        function putEvent(title, info) {
+          $("#eventFeed")
+            .prepend("<div><b>"+title+"</b>"+JSON.stringify(info)+"</div>");
+        }
+
         sps.on("created", function(e, info) {
-          console.log("CREATED: ", info);
+          putEvent("CREATED", info);
         });
 
         sps.on("converted", function(e, info) {
-          console.log("CONVERTED: ", info);
+          putEvent("CONVERTED: ", info);
         });
 
         sps.on("not_converted", function(e, info) {
-          console.log("NOT_CONVERTED: ", info);
+          putEvent("NOT_CONVERTED: ", info);
         });
 
         sps.on("paid", function(e, info) {
-          console.log("PAID: ", info);
+          putEvent("PAID: ", info);
           totalRevenue += info.payment;
-          console.log("TOTAL_REVENUE: ", totalRevenue);
+          // putEvent("TOTAL_REVENUE: ", totalRevenue);
         });
-
       });
     </script>
   </head>
 
   <body>
-
+    <div id="eventFeed">
+    </div>
   </body>
 </html>
