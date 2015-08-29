@@ -42,7 +42,7 @@
 
         ////////////////
         //
-        function createChart(idSelector) {
+        function createChart(idSelector, dataFn) {
           var margin = {top: 30, right: 20, bottom: 30, left: 50},
               width = 600 - margin.left - margin.right,
               height = 270 - margin.top - margin.bottom;
@@ -99,15 +99,20 @@
           }
 
           var data = [];
+
           setInterval(function() {
-            // if(data.length >= 10) data.shift();
-            data.push({value: totalRevenue, time: data.length});
+            dataFn(data);
             updateLine(data);
           }, 100);
         }
 
-        createChart("#line1");
-        createChart("#line2");
+        createChart("#line1", function(data) {
+          data.push({value: totalRevenue, time: data.length});
+        });
+
+        createChart("#line2", function(data) {
+          data.push({value: totalRevenue, time: data.length});
+        });
       });
     </script>
   </head>
