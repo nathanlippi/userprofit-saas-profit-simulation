@@ -4,8 +4,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js"></script>
 
 
-
-
     <script type="text/javascript" src="main.js"></script>
     <link rel="stylesheet" type="text/css" href="main.css">
 
@@ -20,7 +18,7 @@
 
         function putEvent(title, info) {
           $("#eventFeed")
-            .prepend("<div><b>"+title+"</b>"+JSON.stringify(info)+"</div>");
+            .append("<div><b>"+title+"</b>"+JSON.stringify(info)+"</div>");
         }
 
         sps.on("created", function(e, info) {
