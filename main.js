@@ -1,6 +1,6 @@
 var namespacePrefix = "sps_";
 
-SaaSProfitSimulation = function() {
+SaaSProfitSimulation = function () {
   this.setVisitorsPerMonth(50);
   this.setConversionRate(0.4);
   this.setChurnRate(0.2);
@@ -12,31 +12,31 @@ SaaSProfitSimulation = function() {
 
 var fn = SaaSProfitSimulation.prototype;
 
-fn.setVisitorsPerMonth = function(visitorsPerMonth) { // Positive number
+fn.setVisitorsPerMonth = function (visitorsPerMonth) { // Positive number
   this._visitorsPerMonth = visitorsPerMonth;
 };
 
-fn.setConversionRate = function(conversionRate) { // Between 0 and 1
+fn.setConversionRate = function (conversionRate) { // Between 0 and 1
   this._conversionRate = conversionRate;
 };
 
-fn.setChurnRate = function(churnRate) { // Between 0 and 1
+fn.setChurnRate = function (churnRate) { // Between 0 and 1
   this._churnRate = churnRate;
 };
 
-fn.setMonthlyPayment = function(monthlyPayment) { // Greater than 0
+fn.setMonthlyPayment = function (monthlyPayment) { // Greater than 0
   this._monthlyPayment = monthlyPayment;
 };
 
-fn.setReferralRate = function(referralRate) { // Between 0 and 0.9
+fn.setReferralRate = function (referralRate) { // Between 0 and 0.9
   this._referralRate = referralRate;
 };
 
-fn.on = function(eventName, cb) {
-  $(document).on(namespacePrefix+eventName, cb);
+fn.on = function (eventName, cb) {
+  $(document).on(namespacePrefix + eventName, cb);
 };
 
-fn.start = function() {
+fn.start = function () {
   var framesPerSecond = 10;
   var secondsPerMonth = 50;
   var framesPerMonth = framesPerSecond * secondsPerMonth;
@@ -50,7 +50,7 @@ fn.start = function() {
 
     eventInfo.userId = person._userId;
 
-    $(document).trigger(namespacePrefix+eventName, eventInfo);
+    $(document).trigger(namespacePrefix + eventName, eventInfo);
   }
 
   function doMonthly(person, cb) {
@@ -61,7 +61,7 @@ fn.start = function() {
   }
 
   var partialPerson = 0;
-  setInterval(function() {
+  setInterval(function () {
     var newVisitors = self._visitorsPerMonth / framesPerMonth;
     partialPerson += (newVisitors - Math.floor(newVisitors));
     newVisitors = Math.floor(newVisitors);
@@ -124,11 +124,11 @@ var PERSON_STATES = {
 };
 
 // http://stackoverflow.com/questions/1349404/generate-a-string-of-5-random-characters-in-javascript
-function generateId (len) { // len > 15 does not improve randomness
-  return (Math.random().toString(36)+'00000000000000000').slice(2, len+2);
+function generateId(len) { // len > 15 does not improve randomness
+  return(Math.random().toString(36) + '00000000000000000').slice(2, len + 2);
 }
 
-SaaSSimulationPerson = function(referredByUserId) {
+SaaSSimulationPerson = function (referredByUserId) {
   this._referredByUserId = referredByUserId;
   this._userId = generateId(15);
   this._createdOn = Date.now();
@@ -138,19 +138,19 @@ SaaSSimulationPerson = function(referredByUserId) {
 
 var personFn = SaaSSimulationPerson.prototype;
 
-personFn.setState = function(state) {
+personFn.setState = function (state) {
   this._state = state;
   this._lastModified = Date.now();
 };
 
-personFn.getState = function() {
+personFn.getState = function () {
   return this._state;
 };
 
-personFn.getLastModified = function() {
+personFn.getLastModified = function () {
   return this._lastModified;
 };
 
-personFn.setChecked = function() {
+personFn.setChecked = function () {
   this._lastModified = Date.now();
 };
