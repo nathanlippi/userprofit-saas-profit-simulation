@@ -1,12 +1,13 @@
 $(document).ready(function () {
   var sps = new SaaSProfitSimulation();
   sps.setVisitorsPerMonth(500);
-  sps.setChurnRate(0.01);
+  sps.setChurnRate(0.1);
 
   sps.start();
 
   var totalRevenue = 0;
   var userCount = 0;
+  var totalChurnedUsers = 0;
 
   function putEvent(title, info) {
     $("#eventFeed")
@@ -34,6 +35,7 @@ $(document).ready(function () {
   });
 
   sps.on("churned", function (e, info) {
+    totalChurnedUsers++;
     userCount--;
   });
 
@@ -150,4 +152,13 @@ $(document).ready(function () {
     lastUserCount = userCount;
   });
 
+  var lastTotalChurnedUsers = 0;
+  createChart("#churnedUsers", function (data) {
+    data.push({
+      value: totalChurnedUsers - lastTotalChurnedUsers,
+      time: data.length
+    });
+
+    lastTotalChurnedUsers = totalChurnedUsers;
+  });
 });
