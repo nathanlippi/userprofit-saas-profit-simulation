@@ -16,6 +16,7 @@
         sps.start();
 
         var totalRevenue = 0;
+        var userCount = 0;
 
         function putEvent(title, info) {
           $("#eventFeed")
@@ -28,6 +29,7 @@
 
         sps.on("converted", function(e, info) {
           putEvent("CONVERTED: ", info);
+          userCount++;
         });
 
         sps.on("not_converted", function(e, info) {
@@ -38,6 +40,10 @@
           putEvent("PAID: ", info);
           totalRevenue += info.payment;
           // putEvent("TOTAL_REVENUE: ", totalRevenue);
+        });
+
+        sps.on("churned", function(e, info) {
+          userCount--;
         });
 
         ////////////////
@@ -111,7 +117,7 @@
         });
 
         createChart("#line2", function(data) {
-          data.push({value: totalRevenue, time: data.length});
+          data.push({value: userCount, time: data.length});
         });
       });
     </script>
