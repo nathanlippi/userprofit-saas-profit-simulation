@@ -11,6 +11,7 @@
       $(document).ready(function() {
         var sps = new SaaSProfitSimulation();
         sps.setVisitorsPerMonth(500);
+        sps.setChurnRate(0.01);
 
         sps.start();
 
