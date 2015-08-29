@@ -129,4 +129,25 @@ $(document).ready(function () {
       time: data.length
     });
   });
+
+  var lastTotalRevenue = 0;
+  createChart("#newRevenue", function (data) {
+    data.push({
+      value: totalRevenue - lastTotalRevenue,
+      time: data.length
+    });
+
+    lastTotalRevenue = totalRevenue;
+  });
+
+  var lastUserCount = 0;
+  createChart("#newUsers", function (data) {
+    data.push({
+      value: userCount - lastUserCount,
+      time: data.length
+    });
+
+    lastUserCount = userCount;
+  });
+
 });
