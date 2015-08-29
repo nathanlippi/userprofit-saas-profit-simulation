@@ -81,30 +81,32 @@ fn.start = function() {
     for(var key in self._people) {
       var person = self._people[key];
 
+      function sendPaymentEvent(person) {
+        sendPersonEvent(person, "paid", {
+          payment: self._monthlyPayment
+        });
+      }
+
       switch(person.getState()) {
-        case PERSON_STATES.CREATED:
-          if(Math.random() < self._conversionRate) {
-            sendPersonEvent(person, "converted");
-            sendPersonEvent(person, "paid", {
-              payment: self._monthlyPayment
-            });
+      case PERSON_STATES.CREATED:
+        if(Math.random() < self._conversionRate) {
+          sendPersonEvent(person, "converted");
+          person.setState(PERSON_STATES.CONVERTED);
+          sendPaymentEvent(person);
+        } else {
+          sendPersonEvent(person, "not_converted");
+          delete self._people[key];
+        }
+        break;
+      case PERSON_STATES.CONVERTED:
+        doMonthly(person, function () {
+          if(Math.random() < self._churnRate) {
+            sendPersonEvent(person, "churned");
             delete self._people[key];
+          } else {
+            sendPaymentEvent(person);
           }
-          else {
-            sendPersonEvent(person, "not_converted");
-            delete self._people[key];
-          }
-          break;
-        case PERSON_STATES.CONVERTED:
-          doMonthly(person, function() {
-            if(Math.random() < self._churnRate) {
-              sendPersonEvent(person, "churned");
-              delete self._people[key];
-            }
-            else {
-              sendPersonEvent(person, "paid");
-            }
-          });
+        });
         break;
       }
     }
