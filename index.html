@@ -42,68 +42,72 @@
 
         ////////////////
         //
+        function createChart(idSelector) {
+          var margin = {top: 30, right: 20, bottom: 30, left: 50},
+              width = 600 - margin.left - margin.right,
+              height = 270 - margin.top - margin.bottom;
 
-        var margin = {top: 30, right: 20, bottom: 30, left: 50},
-            width = 600 - margin.left - margin.right,
-            height = 270 - margin.top - margin.bottom;
+          // Set the ranges
+          var x = d3.time.scale().range([0, width]);
+          var y = d3.scale.linear().range([height, 0]);
 
-        // Set the ranges
-        var x = d3.time.scale().range([0, width]);
-        var y = d3.scale.linear().range([height, 0]);
+          // Define the axes
+          var xAxis = d3.svg.axis().scale(x)
+              // .orient("bottom").ticks(5);
+              .orient("bottom");
 
-        // Define the axes
-        var xAxis = d3.svg.axis().scale(x)
-            // .orient("bottom").ticks(5);
-            .orient("bottom");
+          var yAxis = d3.svg.axis().scale(y)
+              //.orient("left").ticks(5);
+              .orient("left");
 
-        var yAxis = d3.svg.axis().scale(y)
-            //.orient("left").ticks(5);
-            .orient("left");
+          // Define the line
+          var valueline = d3.svg.line()
+              .x(function(d) { return x(d.time); })
+              .y(function(d) { return y(d.value); });
 
-        // Define the line
-        var valueline = d3.svg.line()
-            .x(function(d) { return x(d.time); })
-            .y(function(d) { return y(d.value); });
+          // Adds the svg canvas
+          var svg = d3.select(idSelector)
+              .append("svg")
+                  .attr("width", width + margin.left + margin.right)
+                  .attr("height", height + margin.top + margin.bottom)
+              .append("g")
+                  .attr("transform",
+                        "translate(" + margin.left + "," + margin.top + ")");
 
-        // Adds the svg canvas
-        var svg = d3.select("#line1")
-            .append("svg")
-                .attr("width", width + margin.left + margin.right)
-                .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-                .attr("transform",
-                      "translate(" + margin.left + "," + margin.top + ")");
+          // Add the X Axis
+          // svg.append("g")
+          //    .attr("class", "x axis")
+          //    .attr("transform", "translate(0," + height + ")")
+          //    .call(xAxis);
 
-        // Add the X Axis
-        // svg.append("g")
-        //    .attr("class", "x axis")
-        //    .attr("transform", "translate(0," + height + ")")
-        //    .call(xAxis);
+          // Add the Y Axis
+          svg.append("g")
+              .attr("class", "y axis")
+              .call(yAxis);
 
-        // Add the Y Axis
-        svg.append("g")
-            .attr("class", "y axis")
-            .call(yAxis);
+          function updateLine(data) {
+            d3.select(idSelector + " .line").remove();
 
-        function updateLine(data) {
-          d3.select(".line").remove();
+            // Scale the range of the data
+            x.domain(d3.extent(data, function(d) { return d.time; }));
+            y.domain([0, d3.max(data, function(d) { return d.value; })]);
 
-          // Scale the range of the data
-          x.domain(d3.extent(data, function(d) { return d.time; }));
-          y.domain([0, d3.max(data, function(d) { return d.value; })]);
+            // Add the valueline path.
+            svg.append("path")
+                .attr("class", "line")
+                .attr("d", valueline(data));
+          }
 
-          // Add the valueline path.
-          svg.append("path")
-              .attr("class", "line")
-              .attr("d", valueline(data));
+          var data = [];
+          setInterval(function() {
+            // if(data.length >= 10) data.shift();
+            data.push({value: totalRevenue, time: data.length});
+            updateLine(data);
+          }, 100);
         }
 
-        var data = [];
-        setInterval(function() {
-          // if(data.length >= 10) data.shift();
-          data.push({value: totalRevenue, time: data.length});
-          updateLine(data);
-        }, 100);
+        createChart("#line1");
+        createChart("#line2");
       });
     </script>
   </head>
@@ -112,7 +116,11 @@
     <div id="eventFeed">
     </div>
 
-    <div id="line1">
+    <div class="chartArea" id="line1">
     </div>
+
+    <div class="chartArea" id="line2">
+    </div>
+
   </body>
 </html>

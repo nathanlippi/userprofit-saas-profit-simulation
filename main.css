@@ -15,18 +15,18 @@
   color: black;
 }
 
-#line1 {
+.chartArea {
   font: 12px Arial;
 }
 
-#line1 path {
+.chartArea path {
   stroke: steelblue;
   stroke-width: 2;
   fill: none;
 }
 
-#line1 .axis path,
-#line1 .axis line {
+.chartArea .axis path,
+.chartArea .axis line {
   fill: none;
   stroke: grey;
   stroke-width: 1;
