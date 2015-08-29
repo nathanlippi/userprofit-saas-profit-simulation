@@ -31,7 +31,6 @@ $(document).ready(function () {
   sps.on("paid", function (e, info) {
     putEvent("PAID: ", info);
     totalRevenue += info.payment;
-    // putEvent("TOTAL_REVENUE: ", totalRevenue);
   });
 
   sps.on("churned", function (e, info) {
@@ -174,8 +173,6 @@ $(document).ready(function () {
       value: totalChurnedUsers - lastTotalChurnedUsers,
       time: Date.now()
     });
-
-    console.log("DATALEN: ", data.length);
 
     lastTotalChurnedUsers = totalChurnedUsers;
 
