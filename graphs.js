@@ -31,10 +31,10 @@ $(document).ready(function () {
   sps.on("paid", function (e, info) {
     putEvent("PAID: ", info);
     totalRevenue += info.payment;
-    // putEvent("TOTAL_REVENUE: ", totalRevenue);
   });
 
   sps.on("churned", function (e, info) {
+    putEvent("CHURNED: ", info);
     totalChurnedUsers++;
     userCount--;
   });
@@ -100,9 +100,10 @@ $(document).ready(function () {
       x.domain(d3.extent(data, function (d) {
         return d.time;
       }));
-      y.domain([0, d3.max(data, function (d) {
+
+      y.domain(d3.extent(data, function (d) {
         return d.value;
-      })]);
+      }));
 
       // Add the valueline path.
       svg.append("path")
@@ -118,47 +119,63 @@ $(document).ready(function () {
     }, 100);
   }
 
+  function pruneData(data) {
+    if(data.length >= 500) {
+      data.shift();
+    }
+  }
+
   createChart("#totalRevenue", function (data) {
     data.push({
       value: totalRevenue,
-      time: data.length
+      time: Date.now()
     });
+
+    pruneData(data);
   });
 
   createChart("#totalUsers", function (data) {
     data.push({
       value: userCount,
-      time: data.length
+      time: Date.now()
     });
+
+    pruneData(data);
   });
 
   var lastTotalRevenue = 0;
   createChart("#newRevenue", function (data) {
     data.push({
       value: totalRevenue - lastTotalRevenue,
-      time: data.length
+      time: Date.now()
     });
 
     lastTotalRevenue = totalRevenue;
+
+    pruneData(data);
   });
 
   var lastUserCount = 0;
   createChart("#newUsers", function (data) {
     data.push({
       value: userCount - lastUserCount,
-      time: data.length
+      time: Date.now()
     });
 
     lastUserCount = userCount;
+
+    pruneData(data);
   });
 
   var lastTotalChurnedUsers = 0;
   createChart("#churnedUsers", function (data) {
     data.push({
       value: totalChurnedUsers - lastTotalChurnedUsers,
-      time: data.length
+      time: Date.now()
     });
 
     lastTotalChurnedUsers = totalChurnedUsers;
+
+    pruneData(data);
   });
 });
